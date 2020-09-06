@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.learning.labs.ratingsdataservice.models.Rating;
@@ -14,13 +15,13 @@ import com.learning.labs.ratingsdataservice.models.UserRating;
 @RequestMapping("/ratingsdata")
 public class RatingsResource {
 
-	@RequestMapping("/{movieId}")
+	@RequestMapping(method = RequestMethod.GET, value="/{movieId}")
 	public Rating getRating(@PathVariable("movieId") String movieId) {
 
 		return new Rating(movieId, 4);
 	}
 
-	@RequestMapping("/users/{userId}")
+	@RequestMapping(method = RequestMethod.GET, value="/users/{userId}")
 	public UserRating getUserRating(@PathVariable("userId") String userId) {
 
 		List<Rating> ratings = Arrays.asList(new Rating("100", 3), new Rating("200", 4));
