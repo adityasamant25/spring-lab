@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.learning.labs.moviecatalogservice.models.CatalogItem;
@@ -23,7 +24,7 @@ public class MovieCatalogResource {
 	@Autowired
 	UserRatingInfo userRatingInfo;
 
-	@RequestMapping("/{userId}")
+	@RequestMapping(method = RequestMethod.GET, value="/{userId}")
 	public List<CatalogItem> getCatalog(@PathVariable("userId") String userId) {
 
 		UserRating userRating = userRatingInfo.getUserRating(userId);
