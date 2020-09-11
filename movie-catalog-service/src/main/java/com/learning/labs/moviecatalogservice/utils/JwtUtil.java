@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtUtil {
 
-	private String SECRET_KEY = "secret";
+	private static final String SECRET = "secret";
 
 	public String generateToken(UserDetails userDetails) {
 
@@ -33,13 +33,12 @@ public class JwtUtil {
 	private String createToken(JwtClaims claims) {
 		JwtToken jwtToken = new JwtToken(claims);
 		JwsCompactProducer jwsProducer = new JwsJwtCompactProducer(jwtToken);
-		String jwsSequence = jwsProducer.signWith(new HmacJwsSignatureProvider(SECRET_KEY, SignatureAlgorithm.HS256));
-		return jwsSequence;
+		return jwsProducer.signWith(new HmacJwsSignatureProvider(SECRET, SignatureAlgorithm.HS256));
 	}
 
 	public Boolean validateToken(String token) {
 		JwsJwtCompactConsumer jwsConsumer = new JwsJwtCompactConsumer(token);
-		return jwsConsumer.verifySignatureWith(new HmacJwsSignatureVerifier(SECRET_KEY, SignatureAlgorithm.HS256));
+		return jwsConsumer.verifySignatureWith(new HmacJwsSignatureVerifier(SECRET, SignatureAlgorithm.HS256));
 	}
 
 	public String extractUsername(String token) {
@@ -49,6 +48,5 @@ public class JwtUtil {
 
 	public void isTokenExpired(String token) {
 		JwtUtils.validateJwtExpiry(new JwsJwtCompactConsumer(token).getJwtToken().getClaims(), 0, false);
-		;
 	}
 }

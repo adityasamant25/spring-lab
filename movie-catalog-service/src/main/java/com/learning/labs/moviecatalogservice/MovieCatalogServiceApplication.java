@@ -7,9 +7,11 @@ import java.util.Collections;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContextBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
@@ -33,6 +35,8 @@ import springfox.documentation.spring.web.plugins.Docket;
 @EnableCircuitBreaker
 @EnableHystrixDashboard
 public class MovieCatalogServiceApplication {
+	
+	Logger logger = LoggerFactory.getLogger(MovieCatalogServiceApplication.class);
 
 	@Bean
 	@LoadBalanced
@@ -52,7 +56,7 @@ public class MovieCatalogServiceApplication {
 					.loadKeyMaterial(keystore, "trustme".toCharArray()).build(), NoopHostnameVerifier.INSTANCE);
 			
 			HttpClient httpClient = HttpClients.custom().setSSLSocketFactory(socketFactory).
-					setMaxConnTotal(Integer.valueOf(5)).setMaxConnPerRoute(Integer.valueOf(5)).build();
+					setMaxConnTotal(5).setMaxConnPerRoute(5).build();
 			
 					
 			requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
@@ -61,8 +65,7 @@ public class MovieCatalogServiceApplication {
 			restTemplate.setRequestFactory(requestFactory);
 		}
 		catch (Exception ex) {
-			System.out.println("Exception occurred while creating restTemplate " + ex);
-			ex.printStackTrace();
+			logger.error("Exception occurred while creating restTemplate");
 		}
 		return restTemplate;
 	}

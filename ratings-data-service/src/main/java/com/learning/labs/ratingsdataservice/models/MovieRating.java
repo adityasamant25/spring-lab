@@ -1,14 +1,14 @@
 package com.learning.labs.ratingsdataservice.models;
 
-public class Rating {
+public class MovieRating {
 
 	private String movieId;
 	private int rating;
 
-	public Rating() {
+	public MovieRating() {
 	}
 
-	public Rating(String movieId, int rating) {
+	public MovieRating(String movieId, int rating) {
 		this.movieId = movieId;
 		this.rating = rating;
 	}

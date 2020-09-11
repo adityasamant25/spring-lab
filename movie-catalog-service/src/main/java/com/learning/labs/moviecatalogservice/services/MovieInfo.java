@@ -6,7 +6,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.learning.labs.moviecatalogservice.models.CatalogItem;
 import com.learning.labs.moviecatalogservice.models.Movie;
-import com.learning.labs.moviecatalogservice.models.Rating;
+import com.learning.labs.moviecatalogservice.models.MovieRating;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 
@@ -23,12 +23,12 @@ public class MovieInfo {
 			@HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000") }, threadPoolKey = "movieInfoPool", threadPoolProperties = {
 					@HystrixProperty(name = "coreSize", value = "20"),
 					@HystrixProperty(name = "maxQueueSize", value = "10") })
-	public CatalogItem getCatalogItem(Rating rating) {
-		Movie movie = restTemplate.getForObject("https://movie-info-service/movies/" + rating.getMovieId(), Movie.class);
-		return new CatalogItem(movie.getName(), "Desc", rating.getRating());
+	public CatalogItem getCatalogItem(MovieRating movieRating) {
+		Movie movie = restTemplate.getForObject("https://movie-info-service/movies/" + movieRating.getMovieId(), Movie.class);
+		return new CatalogItem(movie.getName(), "Desc", movieRating.getRating());
 	}
 
-	public CatalogItem getFallbackCatalogItem(Rating rating) {
-		return new CatalogItem("Movie name not found", "Desc", rating.getRating());
+	public CatalogItem getFallbackCatalogItem(MovieRating movieRating) {
+		return new CatalogItem("Movie name not found", "Desc", movieRating.getRating());
 	}
 }

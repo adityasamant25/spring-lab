@@ -6,9 +6,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.learning.labs.moviecatalogservice.models.AuthenticationRequest;
@@ -21,27 +20,26 @@ public class JwtAuthenticationResource {
 
 	@Autowired
 	AuthenticationManager authenticationManager;
-	
+
 	@Autowired
 	MyUserDetailsService userDetailsService;
-	
+
 	@Autowired
 	JwtUtil jwtUtil;
-	
-	@RequestMapping(method = RequestMethod.POST, value = "/authenticate")
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest)
-			throws Exception {
+
+	@PostMapping("/authenticate")
+	public ResponseEntity<AuthenticationResponse> createAuthenticationToken(
+			@RequestBody AuthenticationRequest authenticationRequest) {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 					authenticationRequest.getUsername(), authenticationRequest.getPassword()));
 		} catch (BadCredentialsException e) {
-			e.printStackTrace();
-			throw new Exception("Incorrect username or password");
+			throw new BadCredentialsException("Incorrect username or password");
 		}
 		UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-		
+
 		String jwt = jwtUtil.generateToken(userDetails);
-		
+
 		return ResponseEntity.ok(new AuthenticationResponse(jwt));
 	}
 }
