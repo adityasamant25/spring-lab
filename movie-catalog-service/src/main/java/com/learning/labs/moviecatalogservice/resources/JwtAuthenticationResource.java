@@ -35,6 +35,7 @@ public class JwtAuthenticationResource {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 					authenticationRequest.getUsername(), authenticationRequest.getPassword()));
 		} catch (BadCredentialsException e) {
+			e.printStackTrace();
 			throw new Exception("Incorrect username or password");
 		}
 		UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
