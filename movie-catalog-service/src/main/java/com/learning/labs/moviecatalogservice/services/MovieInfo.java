@@ -24,7 +24,7 @@ public class MovieInfo {
 					@HystrixProperty(name = "coreSize", value = "20"),
 					@HystrixProperty(name = "maxQueueSize", value = "10") })
 	public CatalogItem getCatalogItem(Rating rating) {
-		Movie movie = restTemplate.getForObject("http://movie-info-service/movies/" + rating.getMovieId(), Movie.class);
+		Movie movie = restTemplate.getForObject("https://movie-info-service/movies/" + rating.getMovieId(), Movie.class);
 		return new CatalogItem(movie.getName(), "Desc", rating.getRating());
 	}
 

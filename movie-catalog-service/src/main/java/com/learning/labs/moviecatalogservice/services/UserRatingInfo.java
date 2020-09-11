@@ -18,7 +18,7 @@ public class UserRatingInfo {
 
 	@HystrixCommand(fallbackMethod = "getFallbackUserRating")
 	public UserRating getUserRating(String userId) {
-		UserRating userRating = restTemplate.getForObject("http://ratings-data-service/ratingsdata/users/" + userId,
+		UserRating userRating = restTemplate.getForObject("https://ratings-data-service/ratingsdata/users/" + userId,
 				UserRating.class);
 		return userRating;
 	}
